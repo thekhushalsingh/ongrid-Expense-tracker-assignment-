@@ -1,0 +1,19 @@
+CREATE DATABASE IF NOT EXISTS expense_tracker;
+USE expense_tracker;
+
+CREATE TABLE IF NOT EXISTS category (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(128) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS expense (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  category_id INT NOT NULL,
+  amount VARCHAR(32) NOT NULL,
+  description VARCHAR(512) DEFAULT '',
+  expense_date DATE NOT NULL,
+  is_deleted TINYINT(1) DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (category_id) REFERENCES category(id)
+);
