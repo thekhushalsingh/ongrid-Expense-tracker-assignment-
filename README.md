@@ -181,6 +181,8 @@ With 11 expenses and 10 per page, `Math.floor(11 / 10) = 1`, hiding the second p
 ```
 
 ---
+## Screenshot - Dashboard
+![Dashboard](https://github.com/thekhushalsingh/ongrid-Expense-tracker-assignment-/blob/main/Dashboard)
 
 ## Assignment Submission Guidelines
 
