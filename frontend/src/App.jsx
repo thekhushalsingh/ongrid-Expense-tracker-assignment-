@@ -133,8 +133,10 @@ function App() {
     loadTrend();
   };
 
-  const pageTotal = expenses.reduce((a, e) => a + e.amount, 0);
-  const totalPages = Math.max(1, Math.floor(total / perPage));
+  // Bug 6 fix: amount is a string from API — use parseFloat to avoid string concatenation
+  const pageTotal = expenses.reduce((a, e) => a + parseFloat(e.amount || 0), 0).toFixed(2);
+  // Bug 7 fix: use Math.ceil so the last partial page is not lost
+  const totalPages = Math.max(1, Math.ceil(total / perPage));
 
   return (
     <>
@@ -253,7 +255,7 @@ function App() {
               <Tooltip
                 contentStyle={{ background: "#1a1f26", border: "1px solid #38444d" }}
               />
-              <Bar dataKey="value" fill="#1d9bf0" name="Total" />
+              <Bar dataKey="amt" fill="#1d9bf0" name="Total" /> {/* Bug 4 fix: was "value", API returns "amt" */}
             </BarChart>
           </ResponsiveContainer>
         </div>

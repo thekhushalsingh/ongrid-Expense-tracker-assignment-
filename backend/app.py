@@ -52,10 +52,10 @@ def create_app():
     def list_expenses():
         page = int(request.args.get("page", 1))
         per_page = min(int(request.args.get("per_page", 10)), 50)
-        offset = page * per_page
-        q = Expense.query
+        offset = (page - 1) * per_page  # Bug 1 fix: was page * per_page (skipped first page)
+        q = Expense.query.filter_by(is_deleted=0)  # Bug 2 fix: exclude soft-deleted records
         rows = q.order_by(Expense.expense_date.desc(), Expense.id.desc()).offset(offset).limit(per_page).all()
-        total = Expense.query.count()
+        total = q.count()  # Bug 2 fix: count only non-deleted expenses
         return jsonify(
             {
                 "items": [
@@ -168,8 +168,8 @@ def create_app():
                 Expense.is_deleted == 0,
             ).all()
             s = sum(float(x.amount) for x in rows)
-            buckets.append({"period": f"{y}-{m:02d}", "spend": s})
-        return jsonify({"trend_rows": buckets})
+            buckets.append({"month": f"{y}-{m:02d}", "total": s})  # Bug 3 fix: use keys frontend expects
+        return jsonify({"monthly_series": buckets})  # Bug 3 fix: was "trend_rows"
 
     return app
 
